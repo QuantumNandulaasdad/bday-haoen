@@ -39,7 +39,7 @@
             justify-content: center;
             align-items: center;
             transform: scale(0); /* Start small */
-            background-color: #febecf; /* Updated background color */
+            background-color: #FBD2E2; /* Blush pink background */
             opacity: 0;
             transition: transform 1s ease-out, opacity 1s ease-out;
         }
@@ -79,9 +79,71 @@
             }
         }
 
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFD700;
+            animation: confettiAnimation 2s forwards;
+        }
+
+        /* Keyframes for confetti animation */
+        @keyframes confettiAnimation {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(100vw) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Bubbly Effect */
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: bubbleAnimation 1s ease-out infinite;
+        }
+
+        /* Keyframes for the bubbly animation */
+        @keyframes bubbleAnimation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2) translateY(-50px);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(4) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        /* Bubbly effect trigger on first image click */
         .slide-out {
             animation: bubbleEffect 1s forwards;
         }
+
+        /* Keyframes for the bubbly effect */
+        @keyframes bubbleEffect {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
         .slide-in {
             transform: scale(1);
             opacity: 1;
@@ -91,6 +153,7 @@
 <body>
     <div class="container">
         <div class="first-image" onclick="slideToSecondImage()">
+            <!-- Sparkly Birthday Banner -->
             <div class="sparkly-banner">Happy Birthday!</div>
         </div>
         <div class="second-image">
@@ -100,9 +163,299 @@
 
     <script>
         function slideToSecondImage() {
+            // Start the party popper effect (confetti from all sides)
+            createConfetti();
+
+            // Start bubble animation and hide first image
             let firstImage = document.querySelector('.first-image');
             firstImage.classList.add('slide-out');
+            
+            // Create bubbles and add them to the container
+            for (let i = 0; i < 20; i++) {
+                let bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                document.querySelector('.container').appendChild(bubble);
+
+                // Set a random position for each bubble
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.top = `${Math.random() * 100}vh`;
+
+                // Remove the bubble after animation ends
+                setTimeout(() => {
+                    bubble.remove();
+                }, 1000);
+            }
+
+            // Slide in the second image from the center with a smooth scaling effect
             document.querySelector('.second-image').classList.add('slide-in');
+        }
+
+        // Function to create confetti effect from all sides
+        function createConfetti() {
+            const container = document.querySelector('.container');
+            
+            // Create confetti from top, bottom, left, and right
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random position from each direction
+                const direction = Math.floor(Math.random() * 4);
+                if (direction === 0) { // Top
+                    confetti.style.top = `0`;
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                } else if (direction === 1) { // Bottom
+                    confetti.style.top = `100vh`;
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                } else if (direction === 2) { // Left
+                    confetti.style.top = `${Math.random() * 100}vh`;
+                    confetti.style.left = `0`;
+                } else { // Right
+                    confetti.style.top = `${Math.random() * 100}vh`;
+                    confetti.style.left = `100vw`;
+                }
+                
+                // Random delay for confetti to start
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                container.appendChild(confetti);
+
+                // Remove confetti after animation completes
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Image Transition with Party Popper from All Sides</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .first-image, .second-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 1s ease-in-out;
+        }
+        .first-image {
+            background: url('first-image.jpg') no-repeat center center/cover;
+            cursor: pointer;
+        }
+        .second-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(0); /* Start small */
+            background-color: #FBD2E2; /* Blush pink background */
+            opacity: 0;
+            transition: transform 1s ease-out, opacity 1s ease-out;
+        }
+        .second-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Sparkly Banner */
+        .sparkly-banner {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            font-family: 'Arial', sans-serif;
+            color: #FFD700;
+            text-align: center;
+            z-index: 10;
+            animation: sparkleEffect 2s infinite ease-in-out;
+        }
+
+        /* Keyframes for the sparkling effect on the banner */
+        @keyframes sparkleEffect {
+            0%, 100% {
+                text-shadow: 
+                    0 0 5px #FFD700, 0 0 10px #FFD700, 
+                    0 0 15px #FFD700, 0 0 20px #FFD700, 
+                    0 0 25px #FFD700, 0 0 30px #FFD700;
+            }
+            50% {
+                text-shadow: 
+                    0 0 5px #FFD700, 0 0 15px #FFD700, 
+                    0 0 25px #FFD700, 0 0 35px #FFD700, 
+                    0 0 45px #FFD700, 0 0 55px #FFD700;
+            }
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFD700;
+            animation: confettiAnimation 2s forwards;
+        }
+
+        /* Keyframes for confetti animation */
+        @keyframes confettiAnimation {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(100vw) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Bubbly Effect */
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: bubbleAnimation 1s ease-out infinite;
+        }
+
+        /* Keyframes for the bubbly animation */
+        @keyframes bubbleAnimation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2) translateY(-50px);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(4) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        /* Bubbly effect trigger on first image click */
+        .slide-out {
+            animation: bubbleEffect 1s forwards;
+        }
+
+        /* Keyframes for the bubbly effect */
+        @keyframes bubbleEffect {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        .slide-in {
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="first-image" onclick="slideToSecondImage()">
+            <!-- Sparkly Birthday Banner -->
+            <div class="sparkly-banner">Happy Birthday!</div>
+        </div>
+        <div class="second-image">
+            <img src="second-image.jpg" alt="Second Image">
+        </div>
+    </div>
+
+    <script>
+        function slideToSecondImage() {
+            // Start the party popper effect (confetti from all sides)
+            createConfetti();
+
+            // Start bubble animation and hide first image
+            let firstImage = document.querySelector('.first-image');
+            firstImage.classList.add('slide-out');
+            
+            // Create bubbles and add them to the container
+            for (let i = 0; i < 20; i++) {
+                let bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                document.querySelector('.container').appendChild(bubble);
+
+                // Set a random position for each bubble
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.top = `${Math.random() * 100}vh`;
+
+                // Remove the bubble after animation ends
+                setTimeout(() => {
+                    bubble.remove();
+                }, 1000);
+            }
+
+            // Slide in the second image from the center with a smooth scaling effect
+            document.querySelector('.second-image').classList.add('slide-in');
+        }
+
+        // Function to create confetti effect from all sides
+        function createConfetti() {
+            const container = document.querySelector('.container');
+            
+            // Create confetti from top, bottom, left, and right
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random position from each direction
+                const direction = Math.floor(Math.random() * 4);
+                if (direction === 0) { // Top
+                    confetti.style.top = `0`;
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                } else if (direction === 1) { // Bottom
+                    confetti.style.top = `100vh`;
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                } else if (direction === 2) { // Left
+                    confetti.style.top = `${Math.random() * 100}vh`;
+                    confetti.style.left = `0`;
+                } else { // Right
+                    confetti.style.top = `${Math.random() * 100}vh`;
+                    confetti.style.left = `100vw`;
+                }
+                
+                // Random delay for confetti to start
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                container.appendChild(confetti);
+
+                // Remove confetti after animation completes
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2000);
+            }
         }
     </script>
 </body>
