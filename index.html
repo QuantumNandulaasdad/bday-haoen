@@ -3,61 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Transition with Persistent First Image</title>
+    <title>Full-Screen Image Transition</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             width: 100vw;
+            height: 100vh;
             overflow: hidden;
-            background-color: #000;
-            position: relative;
         }
         .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+        .image-section {
+            width: 50vw;
+            height: 100vh;
             position: relative;
-            width: 100%;
-            height: 100%;
+            cursor: pointer;
         }
         .first-image, .second-image {
             position: absolute;
-            width: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            transition: transform 1s ease-in-out;
+            background-position: center;
+            background-size: cover;
+            transition: opacity 1s ease-in-out;
         }
         .first-image {
-            background: url('first-image.jpg') no-repeat center center/cover;
-            cursor: pointer;
-            right: 0;
+            background-image: url('first-image.jpg');
         }
         .second-image {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: scale(0);
-            background-color: #FBD2E2;
+            background-image: url('second-image.jpg');
             opacity: 0;
-            transition: transform 1s ease-out, opacity 1s ease-out;
-            width: 100%;
         }
-        .second-image img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .slide-in {
-            transform: scale(1);
+        .show-second {
             opacity: 1;
         }
-        .move-right {
-            transform: translateX(50%);
-        }
+        /* Bubble Animation */
         .bubble {
             position: absolute;
             width: 20px;
@@ -65,37 +54,85 @@
             background-color: #fff;
             border-radius: 50%;
             opacity: 0;
-            animation: bubbleAnimation 1s ease-out;
+            animation: bubbleAnimation 1.5s ease-out infinite;
         }
         @keyframes bubbleAnimation {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(2) translateY(-50px); opacity: 0.6; }
             100% { transform: scale(4) translateY(-100px); opacity: 0; }
         }
+        /* Party Popper Animation */
+        .popper {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            animation: popperAnimation 1s ease-out;
+        }
+        @keyframes popperAnimation {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-50px) scale(1.5); opacity: 0.7; }
+            100% { transform: translateY(-100px) scale(2); opacity: 0; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="first-image" onclick="generateBubbles()"></div>
-        <div class="second-image">
-            <img src="second-image.jpg" alt="Second Image">
+        <div class="image-section" onclick="transitionImages()">
+            <div class="first-image"></div>
+            <div class="second-image"></div>
+        </div>
+        <div class="image-section">
+            <div class="first-image"></div> <!-- Right-side image stays unchanged -->
         </div>
     </div>
+
     <script>
-        function slideToSecondImage() {
-            document.querySelector('.second-image').classList.add('slide-in');
-            document.querySelector('.first-image').classList.add('move-right');
+        function transitionImages() {
+            let firstImageLeft = document.querySelector('.image-section .first-image');
+            let secondImage = document.querySelector('.second-image');
+
+            // Transition left-side first image to second image
+            firstImageLeft.style.opacity = '0';
+            secondImage.classList.add('show-second');
+
+            // Create bubbles and poppers
+            createBubbles();
+            createPartyPoppers();
         }
 
-        function generateBubbles() {
+        function createBubbles() {
             const container = document.querySelector('.container');
-            for (let i = 0; i < 10; i++) {
+
+            for (let i = 0; i < 20; i++) {
                 let bubble = document.createElement('div');
                 bubble.classList.add('bubble');
+                container.appendChild(bubble);
+
                 bubble.style.left = `${Math.random() * 100}vw`;
                 bubble.style.top = `${Math.random() * 100}vh`;
-                container.appendChild(bubble);
-                setTimeout(() => bubble.remove(), 1000);
+
+                setTimeout(() => {
+                    bubble.remove();
+                }, 1500);
+            }
+        }
+
+        function createPartyPoppers() {
+            const container = document.querySelector('.container');
+
+            for (let i = 0; i < 20; i++) {
+                let popper = document.createElement('div');
+                popper.classList.add('popper');
+                container.appendChild(popper);
+
+                popper.style.left = `${Math.random() * 100}vw`;
+                popper.style.top = `${Math.random() * 100}vh`;
+
+                setTimeout(() => {
+                    popper.remove();
+                }, 1000);
             }
         }
     </script>
